@@ -1,0 +1,35 @@
+version: "3"
+services:
+
+  frontend:
+    image: goods-frontend:local
+    build:
+      context: frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+
+  backend:
+    image: goods-backend:local
+    build:
+      context: backend
+      dockerfile: ./Dockerfile
+    depends_on:
+      - database
+    environment:
+      - MONGO_CONNECTION_STRING=mongodb://database:27017/goods-db
+    ports:
+      - "5000:5000"
+
+  database:
+    image: mongo:latest
+    container_name: mongo-db
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=goods-db
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootp@ss
+    ports:
+      - "27017:27017"
+      - "27018:27018"
+      - "27019:27019"
