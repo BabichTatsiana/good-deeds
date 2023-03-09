@@ -28,7 +28,7 @@ services:
     environment:
       - MONGO_INITDB_DATABASE=goods-db
       - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=rootp@ss
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
     ports:
       - "27017:27017"
       - "27018:27018"
