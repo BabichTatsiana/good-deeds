@@ -5,6 +5,7 @@ import { Deed, DeedDocument } from 'src/deed/schemas/deed.schema';
 import { CreateDeedDto } from './dto/create-deed.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -13,8 +14,23 @@ export class UserService {
     @InjectModel(Deed.name) private deedModel: Model<DeedDocument>,
   ) {}
 
+  async hashPassword(password: string) {
+    return bcrypt.hash(password, 10);
+  }
+
+  async findUserByEmail(email: string) {
+    const existsUser = await this.userModel.findOne({ email });
+    return existsUser;
+  }
+
+  async publicUser(email: string) {
+    return this.userModel
+      .findOne({ email })
+      .select(['email', '_id', 'name', 'deeds']);
+  }
+
   async create(dto: CreateUserDto): Promise<User> {
-    console.log(dto);
+    dto.password = await this.hashPassword(dto.password);
     return await this.userModel.create({ ...dto });
   }
 
@@ -47,7 +63,6 @@ export class UserService {
   async deleteDeed(userId: ObjectId, deedId: ObjectId): Promise<void> {
     const user = await this.userModel.findById(userId);
     const deed = await this.deedModel.findByIdAndDelete(deedId);
-    console.log(userId, deedId, user);
     this.replaceDeedById(user.deeds, deed.id);
     await user.save();
   }

@@ -12,6 +12,9 @@ export class User {
   @Prop()
   email: string;
 
+  @Prop()
+  password: string;
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Deed' }] })
   deeds: Deed[];
 }

@@ -8,20 +8,22 @@ import { UserService } from './user.service';
 @Controller('/users')
 export class UserController {
   constructor(public userService: UserService) {}
+
   @Get()
   getAll() {
     const users = this.userService.getAll();
     return users;
   }
 
-  @Post()
-  create(@Body() dto: CreateUserDto) {
-    const user = this.userService.create(dto);
-    return user;
-  }
   @Get(':id')
   getOne(@Param('id') id: ObjectId) {
     const user = this.userService.getOne(id);
+    return user;
+  }
+
+  @Post()
+  create(@Body() dto: CreateUserDto) {
+    const user = this.userService.create(dto);
     return user;
   }
 
